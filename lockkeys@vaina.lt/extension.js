@@ -151,6 +151,15 @@ LockKeysIndicator.prototype = {
 		}
 		if (this.capslock_state != this._getCapslockState()) {
 			let notification_text = _("Caps Lock") + ' ' + this._getStateText(this._getCapslockState());
+			
+			//control surface type cover caps led
+			if (this._getStateText(this._getCapslockState()) == "On") {
+				GLib.spawn_command_line_sync("sudo bash -c \"{ setleds -L +caps < /dev/console;}\"", null, null, null, null);
+			}
+			if (this._getStateText(this._getCapslockState()) == "Off") {
+				GLib.spawn_command_line_sync("sudo bash -c \"{ setleds -L -caps < /dev/console;}\"", null, null, null, null);
+			}
+			
 			if (this.config.isShowNotifications() && this.config.isShowCapsLock()) {
 				this._showNotification(notification_text, "capslock-enabled");
 			}
